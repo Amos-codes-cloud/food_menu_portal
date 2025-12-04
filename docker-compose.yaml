@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: food_menu_web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      # These are passed to PHP if needed
+      DB_HOST: db
+      DB_USER: food_user
+      DB_PASS: secret_password
+      DB_NAME: food_menu_db
+
+  db:
+    image: mysql:8.0
+    container_name: food_menu_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: food_menu_db
+      MYSQL_USER: food_user
+      MYSQL_PASSWORD: secret_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
